@@ -2,7 +2,6 @@
 % Re : eistein radius in arcseconds
 function img = img_gen(siz, Re)
 
-Re = 16;
 pix_angle = 1;
 arcsec = pi / 180 / 3600;
 

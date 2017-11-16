@@ -1,39 +1,49 @@
-digitDatasetPath = fullfile(matlabroot,'toolbox','nnet','nndemos',...
-    'nndatasets','DigitDataset');
-digitData = imageDatastore(digitDatasetPath,...
-    'IncludeSubfolders',true,'LabelSource','foldernames');
+imgSiz = 96;
 
-figure;
-perm = randperm(10000,20);
-for i = 1:20
-    subplot(4,5,i);
-    imshow(digitData.Files{perm(i)});
+trainImgCnt = 100;
+trainImg = zeros(imgSiz, imgSiz, 1, trainImgCnt);
+trainVal = zeros(1,1,1,trainImgCnt);
+
+disp('Generating images...')
+for i = 1:trainImgCnt
+    Re = rand() * imgSiz * 0.3 + 6;
+    trainImg(:,:,1,i) = img_gen(imgSiz, Re);
+    trainVal(:,:,:,i) = Re;
+end
+
+disp('Preparing network structure...')
+layers = [ ...
+    imageInputLayer([imgSiz imgSiz 1])
+    convolution2dLayer(12,96, 'Stride', 4)
+    reluLayer
+    fullyConnectedLayer(1)
+    regressionLayer];
+
+options = trainingOptions('sgdm','InitialLearnRate',0.001, ...
+    'MaxEpochs',20, 'Plots','training-progress');
+
+disp('Beginning Training...')
+net = trainNetwork(trainImg,trainVal,layers,options);
+
+disp('Testing...')
+testImgCnt = 200;
+testImg = zeros(imgSiz, imgSiz, 1, testImgCnt);
+testVal = zeros(testImgCnt,1,1,1);
+
+disp('Generating test images...')
+for i = 1:testImgCnt
+    Re = rand() * imgSiz * 0.3 + 6;
+    testImg(:,:,1,i) = img_gen(imgSiz, Re);
+    testVal(i,:,:,:) = Re;
 end
 
 
-trainNumFiles = 750;
-[trainDigitData,valDigitData] = splitEachLabel(digitData,trainNumFiles,'randomize');
+predictedVal = predict(net, testImg);
 
+predictionError = testVal - predictedVal;
 
-layers = [
-    imageInputLayer([28 28 1])
+thr = 10;
+numCorrect = sum(abs(predictionError) < thr);
+numTestImages = size(testImg,4);
 
-    convolution2dLayer(3,16,'Padding',1)
-    batchNormalizationLayer
-    reluLayer
-
-    maxPooling2dLayer(2,'Stride',2)
-
-    convolution2dLayer(3,32,'Padding',1)
-    batchNormalizationLayer
-    reluLayer
-
-    maxPooling2dLayer(2,'Stride',2)
-
-    convolution2dLayer(3,64,'Padding',1)
-    batchNormalizationLayer
-    reluLayer
-
-    fullyConnectedLayer(10)
-    softmaxLayer
-    classificationLayer];
+accuracy = numCorrect / testImgCnt
