@@ -1,4 +1,4 @@
-imgSiz = 96;
+imgSiz = 64;
 
 trainImgCnt = 100;
 trainImg = zeros(imgSiz, imgSiz, 1, trainImgCnt);
@@ -19,8 +19,8 @@ layers = [ ...
     fullyConnectedLayer(1)
     regressionLayer];
 
-options = trainingOptions('sgdm','InitialLearnRate',0.001, ...
-    'MaxEpochs',20, 'Plots','training-progress');
+options = trainingOptions('sgdm','InitialLearnRate',0.01, ...
+    'MaxEpochs',5);
 
 disp('Beginning Training...')
 net = trainNetwork(trainImg,trainVal,layers,options);
