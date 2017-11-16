@@ -1,28 +1,16 @@
 % siz: side length of image in pixels
-function img = img_gen(siz)
+% Re : eistein radius in arcseconds
+function img = img_gen(siz, Re)
 
-img = zeros(siz);
-
-M = 1e29;
-Dl = 1;
-Ds = 4;
+Re = 16;
 pix_angle = 1;
+arcsec = pi / 180 / 3600;
 
-for x = 1:siz
-    for y = 1:siz
-        %
-        img(x,y) = img_lens_raycast(...
-            M, Dl, Ds, ...
-            pix_angle * (x - 0.5 - siz/2),...
-            pix_angle * (y - 0.5 - siz/2),...
-            @img_source_grid);
-        %}
-        %{
-        img(x,y) = img_source_grid(...
-            pix_angle * (x - 0.5 - siz/2),...
-            pix_angle * (y - 0.5 - siz/2));
-        %}
-    end
-end
+[X, Y] = meshgrid(...
+    pix_angle * arcsec * linspace(-siz/2, siz/2, siz), ...
+    pix_angle * arcsec * linspace(-siz/2, siz/2, siz));
+
+img = img_lens_raycast(Re * arcsec, X, Y, @img_source_grid);
+
 
 end
