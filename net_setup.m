@@ -1,4 +1,4 @@
-imgSiz = 96;
+imgSiz = 64;
 
 trainImgCnt = 700;
 trainImg = zeros(imgSiz, imgSiz, 1, trainImgCnt);
