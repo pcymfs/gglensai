@@ -2,8 +2,7 @@
 % m: mass
 function val = img_lens_raycast(Re, th_x, th_y, source)
 
-% For a point mass, the lensing potential is Re^2*ln(r)
-% so deflection = grad potential = Re^2/r => Re^2 * (x,y)/r^2
+% lensing potential: Re^2*ln(r) => deflection = Re^2/r = Re^2 * (x,y)/r^2
 
 % radial distance
 th_rsq = th_x.^2 + th_y.^2;
