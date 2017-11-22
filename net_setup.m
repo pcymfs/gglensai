@@ -1,6 +1,6 @@
 imgSiz = 64;
 
-trainImgCnt = 700;
+trainImgCnt = 1000;
 trainImg = zeros(imgSiz, imgSiz, 1, trainImgCnt);
 trainVal = zeros(1,1,1,trainImgCnt);
 
@@ -24,20 +24,20 @@ end
 disp('Preparing network structure...')
 layers = [ ...
     imageInputLayer([imgSiz imgSiz 1])
-    convolution2dLayer(12,96, 'Stride', 8)
+    convolution2dLayer(18,96, 'Stride', 12)
     reluLayer
     fullyConnectedLayer(1)
     regressionLayer];
 
-options = trainingOptions('sgdm','InitialLearnRate',0.005, 'MaxEpochs',30, 'Verbose', true);
+options = trainingOptions('sgdm','InitialLearnRate',0.005, 'MaxEpochs',12, 'Verbose', true);
 
 disp('Beginning Training...')
 net = trainNetwork(trainImg,trainVal,layers,options);
 
 disp('Testing...')
-testImgCnt = 1000;
+testImgCnt = 500;
 testImg = zeros(imgSiz, imgSiz, 1, testImgCnt);
-testVal = zeros(1,1,1,trainImgCnt);
+testVal = zeros(1,1,1,testImgCnt);
 
 disp('Generating test images...')
 for i = 1:testImgCnt
