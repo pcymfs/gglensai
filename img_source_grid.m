@@ -9,5 +9,7 @@ val = 0.5 * (grid_profile(th_x / arcsec) + grid_profile(th_y / arcsec));
 end
 
 function v = grid_profile(x)
-v = cos(x * pi / 6) .^ 16;
+
+v = cos(x * pi / 6) .^ 32;
+
 end
