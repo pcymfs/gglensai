@@ -10,7 +10,7 @@ for i = 1:numel(idx)
     subplot(4,5,i)
 
     imshow(mat2gray(imgs(:,:,:,i)))
-    title(sprintf('R_E = %f', vals(:,:,:,i)))
+    title(sprintf('R_E = %f', vals(i)))
     drawnow
 end
 

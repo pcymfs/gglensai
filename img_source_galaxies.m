@@ -4,20 +4,20 @@ th_min = [min(th_x(:)), min(th_y(:))];
 th_max = [max(th_x(:)), max(th_y(:))];
 
 % caluculate how many galaxies to draw
-density = 0.03;
+density = 0.002;
 gcnt = size(th_x);
 gcnt = ceil( density * gcnt(1) * gcnt(2) );
 
-gcnt = 0;
+%gcnt = 0;
 
-scale = 0.00004;
+scale = 0.00002;
 
 % start with a galaxy close to the centre
 val = random_galaxy(th_x, th_y, [0,0], [0,0], scale, scale);
 
 % add more galaxies
 for i = 1:gcnt
-    siz = 0.2 + 0.8 * rand ^ 2;
+    siz = 0.1 + 0.9 * rand ^ 2;
     Reff = ( scale * siz );
     Ieff = siz;
     
@@ -32,7 +32,7 @@ end
 % make a galaxy with a random position, rotation and ellipticity
 function val = random_galaxy(th_x, th_y, th_min, th_max, Reff, Ieff)
 
-pad = Reff * 0.2;
+pad = Reff * 0.05;
 xmin = (th_min(1) - pad);
 xmax = (th_max(1) + pad);
 ymin = (th_min(2) - pad);

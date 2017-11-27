@@ -5,13 +5,19 @@ imgSiz = size(trainImg,1);
 disp('Preparing network structure...')
 layers = [ ...
     imageInputLayer([imgSiz imgSiz 1])
-    convolution2dLayer(18,96, 'Stride', 12)
+    convolution2dLayer(11,25)
+    batchNormalizationLayer
+    reluLayer
+    maxPooling2dLayer(2,'Stride',2) 
+    convolution2dLayer(5,32,'Padding',1)
+    batchNormalizationLayer
     reluLayer
     fullyConnectedLayer(1)
-    regressionLayer]
+    regressionLayer 
+    ];
 
 options = trainingOptions('sgdm', ...
-    'InitialLearnRate',0.005, 'MaxEpochs',12, ...
+    'InitialLearnRate',0.001, 'MaxEpochs',3, ...
     'Verbose',true, 'Plots','training-progress');
 
 disp('Beginning Training...')

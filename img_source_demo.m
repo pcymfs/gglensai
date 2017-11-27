@@ -17,7 +17,7 @@ val(((th_x/arcsec + 10).^2 + (th_y/arcsec + 10).^2) < 16) = 1;
 
 cmap = jet(100);
 
-val = ind2rgb(50+floor(th_x/arcsec),cmap) .* (1 - grid_profile(th_x/arcsec));
+val = ind2rgb(50+floor(th_x/arcsec),cmap) .* (1 - grid_profile(th_y/arcsec));
 
 end
 
