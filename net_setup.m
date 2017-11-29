@@ -4,7 +4,7 @@ imgSiz = size(trainImg,1);
 
 disp('Preparing network structure...')
 layers = [ ...
-    imageInputLayer([imgSiz imgSiz 1])
+    imageInputLayer([imgSiz imgSiz 3])
     convolution2dLayer(11,25)
     batchNormalizationLayer
     reluLayer
@@ -12,7 +12,11 @@ layers = [ ...
     convolution2dLayer(5,32,'Padding',1)
     batchNormalizationLayer
     reluLayer
-    fullyConnectedLayer(2)
+    maxPooling2dLayer(2,'Stride',2) 
+    convolution2dLayer(3,64,'Padding',1)
+    batchNormalizationLayer
+    reluLayer
+    fullyConnectedLayer(3)
     regressionLayer 
     ];
 
