@@ -12,12 +12,12 @@ layers = [ ...
     convolution2dLayer(5,32,'Padding',1)
     batchNormalizationLayer
     reluLayer
-    fullyConnectedLayer(1)
+    fullyConnectedLayer(2)
     regressionLayer 
     ];
 
 options = trainingOptions('sgdm', ...
-    'InitialLearnRate',0.001, 'MaxEpochs',3, ...
+    'InitialLearnRate',0.001, 'MaxEpochs',4, ...
     'Verbose',true, 'Plots','training-progress');
 
 disp('Beginning Training...')

@@ -1,8 +1,10 @@
+function img = img_gen(siz, Re, e)
+% generates an image of a lensed background
 % siz: side length of image in pixels
 % Re : eistein radius in arcseconds
-function img = img_gen(siz, Re)
+% e  : lens ellipticity
 
-pix_angle = 0.125;
+pix_angle = 0.15;
 arcsec = pi / 180 / 3600;
 
 [X, Y] = meshgrid(...
@@ -10,7 +12,7 @@ arcsec = pi / 180 / 3600;
     pix_angle * arcsec * linspace(-siz/2, siz/2, siz));
 
 img = img_lens_raycast('IsothermalEllipsoid', ...
-    Re * arcsec, .99, X, Y, @img_source_galaxies);
+    Re * arcsec, e, X, Y, @img_source_galaxies);
 
 % apply gray scale
 img = floor(256 * img) / 256;
