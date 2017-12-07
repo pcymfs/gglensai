@@ -59,16 +59,12 @@ val = apply_galaxy(th_x, th_y, posx, posy, rot, e, Reff, Ieff, n);
 
 end
 
-
+% I'm reusing the ellipticity distribution for the lensing galaxy here.
 function e = get_rand_e()
-    % e follows a Rayleigh distribution with B = 0.3, truncated at 0.2
-    % T. E. Collett (2015)
     e = 0;
     while e < 0.1 || e >= 1.0
-        e = raylrnd(0.3);
+        e = normrnd(0.7, 0.3);
     end
 end
-
-
 
 

@@ -1,6 +1,7 @@
 function [imgs, vals] = img_setup(n, seed)
 
 imgSiz = 64;
+arcsec = pi / 180 / 3600;
 
 if exist('seed', 'var')
     rng(seed);
@@ -15,27 +16,46 @@ for i = 1:n
         fprintf('Images generated: %d\n', i)
     end
 
-    e = get_rand_e();
-    Re = get_rand_Re();
-    rot = pi * (rand - 0.5);
-    img = img_gen(imgSiz, Re, e, rot);
-    imgs(:,:,1,i) = img;
-    imgs(:,:,2,i) = imgaborfilt(img, 3, 0);
-    imgs(:,:,3,i) = imgaborfilt(img, 3, 90);
+    % Get some initial values for the mass profile
+    Mq = get_rand_q();
+    MRe = get_rand_Re();
+    Mrot = pi * rand;
     
-    vals(i,1) = Re;
-    vals(i,2) = e;
-    vals(i,3) = rot;
+    % The relation between Reff and Re is not quite clear from the sample
+    % in R. Gavazzi, 2012; due to its small sample. But a reasonable fit
+    % can be made with a (positive) random multiplication factor.
+    LReff = (0.2  + abs(normrnd(0.8, 0.25))) * MRe * arcsec;
+    
+    % Shear can cause the luminous ellipticity to differ significantly from
+    % the lens mass distribution. Otherwise it should be closely related.
+    % Koopmans et al. 2006
+    Lq = Mq * (0.5 + abs(normrnd(0.5, 0.1)));
+    
+    % The rotation of the light profile is a function of the lens rotation
+    % and the ellipticity. I designed a probability distribution that is 
+    % very simple but objectively matches the samples in R. Gavazzi, 2012.
+    Lrot = mod(Mrot + normrnd(0, 0.1 * pi * Mq), pi); 
+    
+    
+    Ieff = (0.05 + abs(normrnd(0.1, 0.01))) * LReff / arcsec;
+    n = 1 + abs(normrnd(3,1));
+    
+    img = img_gen(imgSiz, MRe, Mq, Mrot, LReff, Lq, Lrot, Ieff, n);
+    imgs(:,:,:,i) = img;
+    
+    vals(i,1) = MRe;
+    vals(i,2) = Mq;
+    vals(i,3) = Mrot;
 end
 
 end
 
-function e = get_rand_e()
-    % e follows a Rayleigh distribution with B = 0.3, truncated at 0.2
-    % T. E. Collett (2015)
+function e = get_rand_q()
+    % A function for the ellipticity distibution I came up with, based on
+    % the samples in equation 
     e = 0;
-    while e < 0.2 || e >= 1.0
-        e = raylrnd(0.3);
+    while e < 0.1 || e >= 1.0
+        e = normrnd(0.7, 0.3);
     end
 end
 

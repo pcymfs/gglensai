@@ -1,8 +1,15 @@
-function img = img_gen(siz, Re, e, rot)
-% generates an image of a lensed background
-% siz: side length of image in pixels
-% Re : eistein radius in arcseconds
-% e  : lens ellipticity
+function img = img_gen(siz, MRe, Mq, Mrot, LReff, Lq, Lrot, LIeff, Ln)
+% generates an image for the specified parameters
+% siz   : side length of image in pixels
+% MRe   : mass profile, eistein radius in arcseconds
+% Mq    : mass profile, lens ellipticity
+% Mrot  : mass profile, lens rotation
+% LReff : light profile, effective radius
+% Lq    : light profile, galaxy ellipticity
+% Lrot  : light profile, rotation
+% LIeff : effective intensity (at LReff)
+% Ln    : Sersic index
+
 
 pix_angle = 0.18; % LSST:0.18, EUCLID:0.1
 arcsec = pi / 180 / 3600;
@@ -11,30 +18,20 @@ arcsec = pi / 180 / 3600;
     pix_angle * arcsec * linspace(-siz/2, siz/2, siz), ...
     pix_angle * arcsec * linspace(-siz/2, siz/2, siz));
 
-% rotate the coordinate system about 0,0
-v = [(X(:)') ; (Y(:)')];
-Mrot = [cos(rot) -sin(rot); sin(rot) cos(rot)];
 
-vrot = Mrot * v;
+[xrot,yrot] = rotate(X, Y, Mrot);
 
-xrot = vrot(1,:);
-yrot = vrot(2,:);
-xrot = reshape(xrot, size(X));
-yrot = reshape(yrot, size(Y));
-
-
+% raycast the source image through the lens
 img = img_lens_raycast('IsothermalEllipsoid', ...
-    Re * arcsec, e, xrot, yrot, @img_source_galaxies);
+    MRe * arcsec, Mq, xrot, yrot, @img_source_galaxies);
 
 % {
-% add the lensing galaxy to the image foreground
-siz = 0.5 + 0.5 * rand ^ 2;
-Reff = siz * Re * arcsec;
-Ieff = siz * Re;
-n = 1 + abs(normrnd(3,1));
-lgx = apply_galaxy(xrot, yrot, 0, 0, 0, e, Reff, Ieff, n);
+% get the lensing galaxy in the image foreground
+[xrot,yrot] = rotate(X, Y, Lrot);
+lgx = apply_galaxy(xrot, yrot, 0, 0, 0, Lq, LReff, LIeff, Ln);
 
-img = (img + 0.2 * lgx);
+% put the colour channels together
+img = cat(3, lgx, zeros(size(img)), img);
 %}
 
 % apply gray scale
@@ -42,3 +39,16 @@ img = floor(256 * img) / 256;
 img(img > 1) = 1;
 
 end
+
+function [xrot,yrot] = rotate(X, Y, rot)
+% rotate the coordinate system about 0,0
+xy = [(X(:)') ; (Y(:)')];
+vrot = [cos(rot) -sin(rot); sin(rot) cos(rot)] * xy;
+
+xrot = vrot(1,:);
+yrot = vrot(2,:);
+xrot = reshape(xrot, size(X));
+yrot = reshape(yrot, size(Y));
+
+end
+
