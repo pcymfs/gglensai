@@ -1,4 +1,4 @@
-function img = img_gen(siz, MRe, Mq, Mrot, LReff, Lq, Lrot, LIeff, Ln)
+function img = img_gen(siz, MRe, Mq, Mrot, LReff, Lq, Lrot, LIeff, Ln, zl, zs)
 % generates an image for the specified parameters
 % siz   : side length of image in pixels
 % MRe   : mass profile, eistein radius in arcseconds
@@ -9,6 +9,8 @@ function img = img_gen(siz, MRe, Mq, Mrot, LReff, Lq, Lrot, LIeff, Ln)
 % Lrot  : light profile, rotation
 % LIeff : effective intensity (at LReff)
 % Ln    : Sersic index
+% zl    : redshift of lens
+% zs    : redshift of source
 
 
 pix_angle = 0.18; % LSST:0.18, EUCLID:0.1
@@ -31,10 +33,11 @@ img = img_lens_raycast('IsothermalEllipsoid', ...
 lgx = apply_galaxy(xrot, yrot, 0, 0, 0, Lq, LReff, LIeff, Ln);
 
 % put the colour channels together
-img = cat(3, lgx, zeros(size(img)), img);
+%img = cat(3, lgx, zeros(size(img)), img);
+img = img + lgx;
 %}
 
-% apply gray scale
+% apply discrete pixlation
 img = floor(256 * img) / 256;
 img(img > 1) = 1;
 
