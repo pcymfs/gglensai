@@ -2,10 +2,10 @@ function img = img_gen(siz, MRe, Mq, Mrot, LReff, Lq, Lrot, LIeff, Ln, zl, zs)
 % generates an image for the specified parameters
 % siz   : side length of image in pixels
 % MRe   : mass profile, eistein radius in arcseconds
-% Mq    : mass profile, lens ellipticity
+% Mq    : mass profile, lens axes ratio
 % Mrot  : mass profile, lens rotation
 % LReff : light profile, effective radius
-% Lq    : light profile, galaxy ellipticity
+% Lq    : light profile, galaxy axes ratio
 % Lrot  : light profile, rotation
 % LIeff : effective intensity (at LReff)
 % Ln    : Sersic index

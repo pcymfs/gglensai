@@ -1,6 +1,6 @@
 % th_x, th_y: angular observation ray, relative to the lens centre
 % Re        : Einstein radius (arc sec)
-% q         : ellipticity
+% q         : axes ratio
 function val = img_lens_raycast(model, Re, q, th_x, th_y, source)
 
 if strcmp(model, 'Source')

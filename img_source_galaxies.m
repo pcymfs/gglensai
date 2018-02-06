@@ -17,13 +17,13 @@ siz = 0.5 + 0.5 * rand ^ 2;
 Reff = ( 5.0 * siz * arcsec );
 Ieff = siz;
 rot = pi * rand;
-e = get_rand_e();
+q = get_rand_q();
 n = 1 + abs(normrnd(3,1));
 pol_ang = 2 * pi * rand;
 pol_r = 0.5 * Reff * rand;
 posx = pol_r * sin(pol_ang);
 posy = pol_r * cos(pol_ang);
-val = apply_galaxy(th_x, th_y, posx, posy, rot, e, Reff, Ieff, n);
+val = apply_galaxy(th_x, th_y, posx, posy, rot, q, Reff, Ieff, n);
 
 % add more background galaxies
 for i = 1:gcnt
@@ -51,19 +51,19 @@ posx = xmin + (xmax - xmin) * rand;
 posy = ymin + (ymax - ymin) * rand;
 
 rot = pi * rand;
-e = get_rand_e();
+q = get_rand_q();
 
 n = 1 + abs(normrnd(3,1));
 
-val = apply_galaxy(th_x, th_y, posx, posy, rot, e, Reff, Ieff, n);
+val = apply_galaxy(th_x, th_y, posx, posy, rot, q, Reff, Ieff, n);
 
 end
 
-% I'm reusing the ellipticity distribution for the lensing galaxy here.
-function e = get_rand_e()
-    e = 0;
-    while e < 0.1 || e >= 1.0
-        e = normrnd(0.7, 0.3);
+% Axes ratio prbabilty function
+function q = get_rand_q()
+    q = 0;
+    while q < 0.1 || q >= 1.0
+        q = normrnd(0.8, 0.2);
     end
 end
 

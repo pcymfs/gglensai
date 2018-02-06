@@ -1,6 +1,6 @@
 function [imgs, vals] = img_setup(n, seed)
 
-    imgSiz = 32;
+    imgSiz = 64;
     arcsec = pi / 180 / 3600;
 
     if exist('seed', 'var')
@@ -66,8 +66,9 @@ function [imgs, vals] = img_setup(n, seed)
         % The relation between Reff and Re is not quite clear from the sample
         % in R. Gavazzi, 2012; due to its small sample. But a reasonable fit
         % can be made with a (positive) random multiplication factor.
-        LReff = (0.2  + abs(normrnd(0.8, 0.25))) * MRe * arcsec;
-
+        %LReff = (0.2  + abs(normrnd(0.8, 0.25))) * MRe * arcsec;
+        LReff = (0.4  + abs(normrnd(0.6, 0.15))) * MRe * arcsec;
+        
         % Shear can cause the luminous ellipticity to differ significantly from
         % the lens mass distribution. Otherwise it should be closely related.
         % Koopmans et al. 2006
@@ -79,7 +80,7 @@ function [imgs, vals] = img_setup(n, seed)
         Lrot = mod(Mrot + normrnd(0, 0.1 * pi * Mq), pi); 
 
 
-        Ieff = (0.05 + abs(normrnd(0.1, 0.01))) * LReff / arcsec;
+        Ieff = (0.03 + abs(normrnd(0.1, 0.01))) * LReff / arcsec;
         n = 1 + abs(normrnd(3,1));
 
         img = img_gen(imgSiz, MRe, Mq, Mrot, LReff, Lq, Lrot, Ieff, n);
@@ -93,7 +94,7 @@ function [imgs, vals] = img_setup(n, seed)
 end
 
 function q = get_rand_q()
-    % A function for the ellipticity distibution I came up with, based on
+    % A function for the axes ratio distibution I came up with, based on
     % the samples in equation 
     q = 0;
     while q < 0.1 || q >= 1.0
